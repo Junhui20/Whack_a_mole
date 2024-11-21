@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/home_background">
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/app_title"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:textColor="#FFFFFF"
+        android:shadowColor="#000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="5"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#80FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="80dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/start"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/start_game"
+                android:textSize="18sp"
+                android:onClick="StartGame"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="#4CAF50"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scores"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/high_scores"
+                android:textSize="18sp"
+                android:onClick="SeeScores"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="#2196F3"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/achievements"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/achievements"
+                android:textSize="18sp"
+                android:onClick="ShowAchievements"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="#9C27B0"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/About"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/how_to_play"
+                android:textSize="18sp"
+                android:onClick="HowtoPlay"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="#673AB7"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/quit"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="@string/quit_game"
+                android:textSize="18sp"
+                android:onClick="QuitGame"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                style="@style/Widget.MaterialComponents.Button"
+                android:backgroundTint="#F44336"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="32dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="12dp"
+    app:cardBackgroundColor="#F5FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="28dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_achievement_perfect"
+            app:tint="#FFD700" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:elevation="4dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:text="@string/level_complete"
+            android:textAllCaps="true"
+            android:textColor="#212121"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
+            android:background="#4CAF50" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="#E8F5E9"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <TextView
+                android:id="@+id/score_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:padding="16dp"
+                android:textColor="#1B5E20"
+                android:textSize="24sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_end_game"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:text="@string/end_game"
+                android:textAllCaps="true"
+                android:textColor="#FF5722"
+                android:textSize="16sp"
+                app:cornerRadius="16dp"
+                app:strokeColor="#FF5722"
+                app:strokeWidth="2dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_continue"
+                android:layout_width="0dp"
+                android:layout_height="65dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#4CAF50"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:text="@string/continue_game"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                app:cornerRadius="16dp"
+                app:elevation="6dp"
+                app:rippleColor="#80FFFFFF" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

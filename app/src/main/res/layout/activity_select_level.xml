@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/select_level"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:columnCount="2"
+        android:rowCount="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/level1_btn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/level_1"
+                android:textSize="20sp"
+                android:onClick="onLevelClick"
+                android:backgroundTint="#4CAF50"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/level2_btn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/level_2"
+                android:textSize="20sp"
+                android:onClick="onLevelClick"
+                android:backgroundTint="#2196F3"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/level3_btn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/level_3"
+                android:textSize="20sp"
+                android:onClick="onLevelClick"
+                android:backgroundTint="#FF9800"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/level4_btn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/level_4"
+                android:textSize="20sp"
+                android:onClick="onLevelClick"
+                android:backgroundTint="#9C27B0"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/level5_btn"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/level_5"
+                android:textSize="20sp"
+                android:onClick="onLevelClick"
+                android:backgroundTint="#E91E63"
+                app:cornerRadius="16dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </com.google.android.material.card.MaterialCardView>
+
+    </GridLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/back_btn"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/back"
+        android:textSize="16sp"
+        android:onClick="onBackClick"
+        android:backgroundTint="#FF5722"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

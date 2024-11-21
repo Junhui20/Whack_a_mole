@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="24dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_achievement_score"
+            android:tint="#FFD700"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/new_high_score"
+            android:textColor="#212121"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="4dp"
+            android:background="#FFD700"
+            android:layout_gravity="center"
+            android:layout_marginBottom="24dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
+            app:boxStrokeWidth="2dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/enter_name"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="16dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="@string/save_score"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:backgroundTint="#4CAF50"
+            app:cornerRadius="12dp"
+            app:elevation="4dp"
+            app:rippleColor="#80FFFFFF"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
