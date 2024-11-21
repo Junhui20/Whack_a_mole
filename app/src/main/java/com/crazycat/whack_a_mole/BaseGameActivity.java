@@ -529,6 +529,11 @@ public abstract class BaseGameActivity extends AppCompatActivity {
      * Shows the level complete dialog.
      */
     protected void showLevelCompleteDialog() {
+        // Play success sound
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.success);
+        mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+        mediaPlayer.start();
+
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_level_complete);
         dialog.setCancelable(false);
