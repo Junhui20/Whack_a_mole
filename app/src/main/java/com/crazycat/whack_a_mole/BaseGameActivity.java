@@ -25,26 +25,36 @@ import android.os.Handler;
 import android.widget.FrameLayout;
 
 /**
- * Base class for game activities.
- * Provides common functionality for game logic, sound management, and UI setup.
+ * Base class for all game activities in Whack-A-Mole.
+ * Handles core game mechanics including:
+ * - Grid setup and mole spawning
+ * - Score tracking
+ * - Timer management
+ * - Sound effects and background music
+ * - Achievement tracking
  */
 public abstract class BaseGameActivity extends AppCompatActivity {
+    // UI Elements
     protected GridLayout targetGrid;
     protected TextView scoreText, timerText;
+    
+    // Game state
     protected int score = 0;
     protected int gridSize = 9;
-    protected List<ImageView> targetViews = new ArrayList<>();
     protected int timeRemaining = 30;
-    protected CountDownTimer timer;
-    protected ImageView lastHighlightedView;
-    protected AchievementManager achievementManager;
     protected boolean isGameActive = false;
     protected int specialItemsCollected = 0;
     protected long lastHitTime = 0;
     protected int consecutiveHits = 0;
     protected long speedRunStartTime = 0;
+    
+    // Game objects
+    protected List<ImageView> targetViews = new ArrayList<>();
+    protected CountDownTimer timer;
+    protected ImageView lastHighlightedView;
+    protected AchievementManager achievementManager;
 
-    // Sound related variables
+    // Audio
     protected MediaPlayer bgmPlayer;
     protected SoundPool soundPool;
     protected int clickSoundId;
@@ -53,11 +63,6 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     protected int timeBuffSoundId;
     protected float soundVolume = 1.0f;
 
-    /**
-     * Called when the activity is created.
-     * Initializes the game components, sets up the UI, and starts the game.
-     * @param savedInstanceState Saved instance state.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +86,6 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         scoreText.setText(getString(R.string.score_display, score));
     }
 
-    /**
-     * Initializes the game views, including the score display and timer.
-     */
     private void initializeViews() {
         targetGrid = findViewById(R.id.targetGrid);
         scoreText = findViewById(R.id.scoreText);
@@ -94,15 +96,13 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         timerText.setText(getString(R.string.time_format, timeRemaining));
     }
 
-    /**
-     * Initializes the game logic and variables.
-     */
     private void initializeGame() {
         // Initialize game variables
     }
 
     /**
-     * Initializes the sound effects and background music.
+     * Initializes sound effects and background music.
+     * Sets up SoundPool with game-specific audio attributes.
      */
     private void initializeSound() {
         // Initialize background music
@@ -134,43 +134,8 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Plays the click sound effect.
-     */
-    protected void playClickSound() {
-        if (soundPool != null) {
-            soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
-        }
-    }
-
-    /**
-     * Plays the success sound effect.
-     */
-    protected void playSuccessSound() {
-        if (soundPool != null) {
-            soundPool.play(successSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
-        }
-    }
-
-    /**
-     * Plays the score buff sound effect.
-     */
-    protected void playScoreBuffSound() {
-        if (soundPool != null) {
-            soundPool.play(scoreBuffSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
-        }
-    }
-
-    /**
-     * Plays the time buff sound effect.
-     */
-    protected void playTimeBuffSound() {
-        if (soundPool != null) {
-            soundPool.play(timeBuffSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
-        }
-    }
-
-    /**
-     * Sets up the grid layout and creates the grid cells.
+     * Sets up the game grid with proper sizing and cell creation.
+     * Calculates dimensions based on screen size and grid requirements.
      */
     protected void setupGrid() {
         // Calculate grid size
@@ -232,9 +197,7 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates the grid cells and sets up their layout.
-     * @param cellSize The size of each cell.
-     * @param cellMargin The margin between cells.
+     * Creates individual grid cells with proper layout and click handlers.
      */
     private void createGridCells(int cellSize, int cellMargin) {
         for (int i = 0; i < this.gridSize; i++) {
@@ -294,28 +257,8 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Stops the background music.
-     */
-    protected void stopBGM() {
-        if (bgmPlayer != null && bgmPlayer.isPlaying()) {
-            bgmPlayer.stop();
-        }
-    }
-
-    /**
-     * Starts the game.
-     */
-    protected void startGame() {
-        score = getIntent().getIntExtra(getString(R.string.extra_score), 0);
-        scoreText.setText(getString(R.string.score_display, score));
-        achievementManager = new AchievementManager(this);
-        isGameActive = true;
-        startTimer();
-        showNextMole();
-    }
-
-    /**
-     * Shows the next mole or power-up.
+     * Shows the next mole or power-up at a random position.
+     * Handles different item types (normal mole, time bonus, score bonus).
      */
     protected void showNextMole() {
         // First reset all cells to normal state
@@ -352,8 +295,8 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Handles a click on a target.
-     * @param target The target that was clicked.
+     * Handles player interaction with a target.
+     * Updates score, achievements, and sound effects based on target type.
      */
     protected void onTargetClick(ImageView target) {
         if (!isGameActive || target == null || target.getTag() == null) {
@@ -560,28 +503,18 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Gets the layout resource ID for the game activity.
-     * @return The layout resource ID.
+     * @return The layout resource ID for the game activity
      */
     protected abstract int getLayoutResourceId();
 
     /**
-     * Gets the next level class.
-     * @return The next level class, or null if there is no next level.
+     * @return The next level's activity class, or null if this is the final level
      */
     protected abstract Class<?> getNextLevelClass();
 
     /**
-     * Called when the time is up.
+     * Called when the game timer reaches zero.
+     * Should be implemented by child classes to handle level completion.
      */
     protected abstract void onTimeUp();
-
-    /**
-     * Handles when the player misses a target.
-     * Subclasses can override this to implement specific miss penalties.
-     */
-    protected void onMissedTarget() {
-        // Base implementation does nothing
-        // Subclasses can override to add penalties
-    }
 }

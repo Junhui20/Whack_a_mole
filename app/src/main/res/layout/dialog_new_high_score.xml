@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="@dimen/dialog_width"
     android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:layout_margin="24dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="8dp"
@@ -12,56 +13,57 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="24dp">
 
         <ImageView
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@string/new_high_score_icon"
             android:src="@drawable/ic_achievement_score"
-            android:tint="#FFD700"
-            android:layout_marginBottom="16dp"/>
+            app:tint="#FFD700" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:text="@string/new_high_score"
             android:textColor="#212121"
             android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:textStyle="bold" />
 
         <View
             android:layout_width="80dp"
             android:layout_height="4dp"
-            android:background="#FFD700"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp"
+            android:background="#FFD700" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxCornerRadiusBottomEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusTopStart="12dp"
             app:boxStrokeColor="#4CAF50"
-            app:hintTextColor="#4CAF50"
-            app:boxStrokeWidth="2dp">
+            app:boxStrokeWidth="2dp"
+            app:hintTextColor="#4CAF50">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/nameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:hint="@string/enter_name"
                 android:inputType="textPersonName"
                 android:maxLines="1"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium"
-                android:padding="16dp"/>
+                android:padding="16dp"
+                android:textSize="18sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,13 +71,13 @@
             android:id="@+id/btn_save"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:backgroundTint="#4CAF50"
+            android:fontFamily="sans-serif-medium"
             android:text="@string/save_score"
             android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
-            android:backgroundTint="#4CAF50"
             app:cornerRadius="12dp"
             app:elevation="4dp"
-            app:rippleColor="#80FFFFFF"/>
+            app:rippleColor="#80FFFFFF" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

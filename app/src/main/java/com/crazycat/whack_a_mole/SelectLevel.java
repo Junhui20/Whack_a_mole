@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+// Activity for selecting game difficulty level (1-5)
 public class SelectLevel extends AppCompatActivity {
 
     @Override
@@ -13,6 +14,7 @@ public class SelectLevel extends AppCompatActivity {
         setContentView(R.layout.activity_select_level);
     }
 
+    // Handles level button clicks and starts game with selected level
     public void onLevelClick(View view) {
         int level = -1;
         int viewId = view.getId();
@@ -37,6 +39,7 @@ public class SelectLevel extends AppCompatActivity {
         }
     }
 
+    // Returns to previous screen with slide animation
     public void onBackClick(View view) {
         finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);

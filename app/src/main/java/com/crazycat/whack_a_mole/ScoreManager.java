@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+// Manages high scores storage and retrieval using SharedPreferences
 public class ScoreManager {
     private final SharedPreferences preferences;
     private final Gson gson;
@@ -25,6 +26,7 @@ public class ScoreManager {
         this.gson = new Gson();
     }
 
+    // Gets sorted list of high scores (highest first)
     public List<HighScore> getHighScores() {
         String json = preferences.getString(keyScores, null);
         if (json == null) {
@@ -36,11 +38,13 @@ public class ScoreManager {
         return scores;
     }
 
+    // Checks if score qualifies for top 25 high scores
     public boolean isHighScore(int score) {
         List<HighScore> scores = getHighScores();
         return scores.size() < 25 || score > scores.get(scores.size() - 1).getScore();
     }
 
+    // Adds new high score and keeps only top 25
     public void addHighScore(String name, int score) {
         List<HighScore> scores = getHighScores();
         scores.add(new HighScore(name, score));

@@ -46,6 +46,7 @@
     <string name="achievement_power">Power Collector</string>
     <string name="achievement_score">High Scorer</string>
     <string name="new_high_score">New High Score!</string>
+    <string name="new_high_score_icon">High score trophy icon</string>
     <string name="enter_name_new">Enter your name</string>
     <string name="save">Save</string>
         <!-- Game Preferences -->

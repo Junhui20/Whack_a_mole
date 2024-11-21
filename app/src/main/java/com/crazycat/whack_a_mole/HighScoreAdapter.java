@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crazycat.whack_a_mole.models.HighScore;
 import java.util.List;
 
+// Displays high scores in a RecyclerView with special styling for top 3 ranks
 public class HighScoreAdapter extends RecyclerView.Adapter<HighScoreAdapter.ViewHolder> {
     private final List<HighScore> highScores;
 
@@ -34,12 +35,13 @@ public class HighScoreAdapter extends RecyclerView.Adapter<HighScoreAdapter.View
         holder.nameText.setText(highScore.getName());
         holder.scoreText.setText(context.getString(R.string.score_number, highScore.getScore()));
 
-        // 为前三名设置特殊背景
+        // Special background for top 3 scores
         if (position < 3) {
             holder.itemView.setBackgroundResource(getBackgroundForRank(position));
         }
     }
 
+    // Returns background resource based on rank (gold, silver, bronze)
     private int getBackgroundForRank(int position) {
         switch (position) {
             case 0: return R.drawable.gold_background;
@@ -54,6 +56,7 @@ public class HighScoreAdapter extends RecyclerView.Adapter<HighScoreAdapter.View
         return highScores.size();
     }
 
+    // Holds references to the views for each high score item
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView rankText;
         TextView nameText;

@@ -15,8 +15,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.Random;
 
+/**
+ * Main game activity that implements level-specific logic and UI.
+ * Extends BaseGameActivity to add:
+ * - Level progression
+ * - Tutorial display
+ * - High score handling
+ * - Level-specific configurations
+ */
 public class GameActivity extends BaseGameActivity {
-    private static final int TIME_BONUS_CHANCE = 15; // 15% chance for time bonus
+    private static final int TIME_BONUS_CHANCE = 15;  // 15% chance for time bonus
     private static final int SCORE_BONUS_CHANCE = 10; // 10% chance for score bonus
     private final Random random = new Random();
     private ScoreManager scoreManager;
@@ -53,6 +61,11 @@ public class GameActivity extends BaseGameActivity {
         }
     }
 
+    /**
+     * Configures grid size and time limit based on current level.
+     * Level 1-4: 5 seconds, increasing grid size
+     * Level 5: 30 seconds, 6x6 grid with power-ups
+     */
     private void configureLevelSettings() {
         switch (currentLevel) {
             case 1:
@@ -83,6 +96,9 @@ public class GameActivity extends BaseGameActivity {
         return R.layout.activity_game;
     }
 
+    /**
+     * Shows the tutorial dialog for level 5, explaining power-ups.
+     */
     private void showTutorial() {
         Dialog dialog = new Dialog(this, R.style.LightDialogTheme);
         dialog.setContentView(R.layout.dialog_tutorial);
@@ -131,6 +147,9 @@ public class GameActivity extends BaseGameActivity {
         }
     }
 
+    /**
+     * Shows dialog for new high score, allowing player to enter their name.
+     */
     private void showNewHighScoreDialog() {
         playSuccessSound();
         Dialog dialog = new Dialog(this, R.style.LightDialogTheme);
@@ -165,6 +184,11 @@ public class GameActivity extends BaseGameActivity {
         dialog.show();
     }
 
+    /**
+     * Shows game over dialog with final score and options to:
+     * - View high scores
+     * - Return to main menu
+     */
     private void showGameOverDialog() {
         stopBGM();
         playSuccessSound();
@@ -325,20 +349,6 @@ public class GameActivity extends BaseGameActivity {
 
     @Override
     protected Class<?> getNextLevelClass() {
-        if (currentLevel >= 5) {
-            return null;
-        }
-        return GameActivity.class;
-    }
-
-    @Override
-    protected void goToNextLevel() {
-        if (currentLevel < 5) {
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra(getString(R.string.extra_score), score);
-            intent.putExtra(getString(R.string.extra_level), currentLevel + 1);  // Pass the next level number
-            startActivity(intent);
-            finish();
-        }
+        return currentLevel < 5 ? GameActivity.class : null;
     }
 }

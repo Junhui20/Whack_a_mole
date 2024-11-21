@@ -1,3 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- 移除这个主题定义，因为我们已经在 styles.xml 中定义了主题 -->
-</resources>

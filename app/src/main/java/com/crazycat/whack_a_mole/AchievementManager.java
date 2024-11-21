@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Manages game achievements, including their initialization, unlocking conditions,
+ * and persistence using SharedPreferences.
+ */
 public class AchievementManager {
     private static final String PREFS_NAME = "achievements";
     private static final String ACHIEVEMENT_PREFIX = "achievement_";
@@ -19,6 +23,10 @@ public class AchievementManager {
     private final SharedPreferences prefs;
     private final List<Achievement> achievements = new ArrayList<>();
 
+    /**
+     * Creates a new AchievementManager and loads existing achievement states.
+     * @param context Application context for accessing resources and preferences
+     */
     public AchievementManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -26,6 +34,9 @@ public class AchievementManager {
         loadAchievementStates();
     }
 
+    /**
+     * Initializes all available achievements with their default states.
+     */
     private void initializeAchievements() {
         achievements.add(new Achievement(
             PERFECT_ACHIEVEMENT,
@@ -56,6 +67,9 @@ public class AchievementManager {
         ));
     }
 
+    /**
+     * Loads the unlocked state of each achievement from SharedPreferences.
+     */
     private void loadAchievementStates() {
         for (Achievement achievement : achievements) {
             boolean isUnlocked = prefs.getBoolean(ACHIEVEMENT_PREFIX + achievement.getId(), false);
@@ -63,11 +77,17 @@ public class AchievementManager {
         }
     }
 
+    /**
+     * Returns an unmodifiable list of all achievements.
+     */
     @NonNull
     public List<Achievement> getAchievements() {
         return Collections.unmodifiableList(achievements);
     }
 
+    /**
+     * Marks an achievement as unlocked and persists the state.
+     */
     private void unlockAchievement(Achievement achievement) {
         if (!achievement.isUnlocked()) {
             achievement.setUnlocked(true);
@@ -77,6 +97,11 @@ public class AchievementManager {
         }
     }
 
+    /**
+     * Checks if the speed achievement should be unlocked based on hit count and time.
+     * @param hits Number of consecutive hits
+     * @param timeSpan Time window in milliseconds
+     */
     public void checkSpeedAchievement(int hits, long timeSpan) {
         if (hits >= 10 && timeSpan <= 5000) {
             for (Achievement achievement : achievements) {
@@ -88,6 +113,10 @@ public class AchievementManager {
         }
     }
 
+    /**
+     * Checks if the high score achievement should be unlocked.
+     * @param score Current game score
+     */
     public void checkHighScore(int score) {
         if (score >= 50) {
             for (Achievement achievement : achievements) {
@@ -99,6 +128,10 @@ public class AchievementManager {
         }
     }
 
+    /**
+     * Checks if the perfect level achievement should be unlocked.
+     * @param misses Number of misses
+     */
     public void checkPerfectLevel(int misses) {
         if (misses == 0) {
             for (Achievement achievement : achievements) {
@@ -110,6 +143,10 @@ public class AchievementManager {
         }
     }
 
+    /**
+     * Checks if the powerup collection achievement should be unlocked.
+     * @param powerupsCollected Number of powerups collected
+     */
     public void checkPowerupCollection(int powerupsCollected) {
         if (powerupsCollected >= 5) {
             for (Achievement achievement : achievements) {
