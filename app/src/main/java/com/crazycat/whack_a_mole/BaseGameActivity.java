@@ -25,36 +25,26 @@ import android.os.Handler;
 import android.widget.FrameLayout;
 
 /**
- * Base class for all game activities in Whack-A-Mole.
- * Handles core game mechanics including:
- * - Grid setup and mole spawning
- * - Score tracking
- * - Timer management
- * - Sound effects and background music
- * - Achievement tracking
+ * Base class for game activities.
+ * Provides common functionality for game logic, sound management, and UI setup.
  */
 public abstract class BaseGameActivity extends AppCompatActivity {
-    // UI Elements
     protected GridLayout targetGrid;
     protected TextView scoreText, timerText;
-    
-    // Game state
     protected int score = 0;
     protected int gridSize = 9;
+    protected List<ImageView> targetViews = new ArrayList<>();
     protected int timeRemaining = 30;
+    protected CountDownTimer timer;
+    protected ImageView lastHighlightedView;
+    protected AchievementManager achievementManager;
     protected boolean isGameActive = false;
     protected int specialItemsCollected = 0;
     protected long lastHitTime = 0;
     protected int consecutiveHits = 0;
     protected long speedRunStartTime = 0;
-    
-    // Game objects
-    protected List<ImageView> targetViews = new ArrayList<>();
-    protected CountDownTimer timer;
-    protected ImageView lastHighlightedView;
-    protected AchievementManager achievementManager;
 
-    // Audio
+    // Sound related variables
     protected MediaPlayer bgmPlayer;
     protected SoundPool soundPool;
     protected int clickSoundId;
@@ -63,6 +53,11 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     protected int timeBuffSoundId;
     protected float soundVolume = 1.0f;
 
+    /**
+     * Called when the activity is created.
+     * Initializes the game components, sets up the UI, and starts the game.
+     * @param savedInstanceState Saved instance state.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +81,9 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         scoreText.setText(getString(R.string.score_display, score));
     }
 
+    /**
+     * Initializes the game views, including the score display and timer.
+     */
     private void initializeViews() {
         targetGrid = findViewById(R.id.targetGrid);
         scoreText = findViewById(R.id.scoreText);
@@ -96,13 +94,15 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         timerText.setText(getString(R.string.time_format, timeRemaining));
     }
 
+    /**
+     * Initializes the game logic and variables.
+     */
     private void initializeGame() {
         // Initialize game variables
     }
 
     /**
-     * Initializes sound effects and background music.
-     * Sets up SoundPool with game-specific audio attributes.
+     * Initializes the sound effects and background music.
      */
     private void initializeSound() {
         // Initialize background music
@@ -111,14 +111,14 @@ public abstract class BaseGameActivity extends AppCompatActivity {
 
         // Initialize sound effects
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_GAME)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build();
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
 
         soundPool = new SoundPool.Builder()
-            .setMaxStreams(5)
-            .setAudioAttributes(audioAttributes)
-            .build();
+                .setMaxStreams(5)
+                .setAudioAttributes(audioAttributes)
+                .build();
 
         // Load sound effects
         clickSoundId = soundPool.load(this, R.raw.click, 1);
@@ -134,31 +134,66 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets up the game grid with proper sizing and cell creation.
-     * Calculates dimensions based on screen size and grid requirements.
+     * Plays the click sound effect.
+     */
+    protected void playClickSound() {
+        if (soundPool != null) {
+            soundPool.play(clickSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
+        }
+    }
+
+    /**
+     * Plays the success sound effect.
+     */
+    protected void playSuccessSound() {
+        if (soundPool != null) {
+            soundPool.play(successSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
+        }
+    }
+
+    /**
+     * Plays the score buff sound effect.
+     */
+    protected void playScoreBuffSound() {
+        if (soundPool != null) {
+            soundPool.play(scoreBuffSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
+        }
+    }
+
+    /**
+     * Plays the time buff sound effect.
+     */
+    protected void playTimeBuffSound() {
+        if (soundPool != null) {
+            soundPool.play(timeBuffSoundId, soundVolume, soundVolume, 1, 0, 1.0f);
+        }
+    }
+
+    /**
+     * Sets up the grid layout and creates the grid cells.
      */
     protected void setupGrid() {
         // Calculate grid size
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
-        
+
         // Calculate available space - use slightly less width to ensure no cutoff
         int availableHeight = (int)(screenHeight * 0.8); // Use 70% of screen height
         int availableWidth = (int)(screenWidth * 0.90); // Use 90% of screen width
-        
+
         // Use the smaller dimension to ensure grid fits
         int maxGridSize = Math.min(availableWidth, availableHeight);
-        
+
         // Calculate cell size based on grid dimensions
         int columns = (int)Math.sqrt(this.gridSize);
-        
+
         // Calculate total margins and padding per row
         int cellMargin = this.gridSize == 36 ? 2 : 4; // Margin between cells
         int totalMarginsPerRow = cellMargin * (columns + 1); // Include outer margins
-        
+
         // Calculate cell size accounting for margins
         int cellSize = (maxGridSize - totalMarginsPerRow) / columns;
-        
+
         // For Level 5 (6x6 grid), adjust if needed
         if (this.gridSize == 36) {
             cellSize = (int)(cellSize * 0.95); // Slightly reduce cell size
@@ -167,21 +202,21 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         // Set grid properties
         targetGrid.setColumnCount(columns);
         targetGrid.setRowCount(columns);
-        
+
         // Calculate total grid size including margins
         int totalGridSize = (cellSize * columns) + totalMarginsPerRow;
-        
+
         // Center the grid
         int horizontalMargin = (screenWidth - totalGridSize) / 2;
-        
+
         // Ensure minimum margin
         horizontalMargin = Math.max(horizontalMargin, 16); // Minimum 16dp margin
-        
+
         ViewGroup.MarginLayoutParams gridParams = (ViewGroup.MarginLayoutParams) targetGrid.getLayoutParams();
         if (gridParams == null) {
             gridParams = new ViewGroup.MarginLayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             );
         }
         gridParams.setMargins(horizontalMargin, 16, horizontalMargin, 16);
@@ -197,7 +232,9 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Creates individual grid cells with proper layout and click handlers.
+     * Creates the grid cells and sets up their layout.
+     * @param cellSize The size of each cell.
+     * @param cellMargin The margin between cells.
      */
     private void createGridCells(int cellSize, int cellMargin) {
         for (int i = 0; i < this.gridSize; i++) {
@@ -205,23 +242,23 @@ public abstract class BaseGameActivity extends AppCompatActivity {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = cellSize;
             params.height = cellSize;
-            
+
             // Set consistent margins
             params.setMargins(cellMargin, cellMargin, cellMargin, cellMargin);
-            
+
             cell.setLayoutParams(params);
             cell.setBackgroundResource(R.drawable.grid_cell_background);
 
             ImageView moleView = new ImageView(this);
             FrameLayout.LayoutParams moleParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
             );
-            
+
             // Set consistent padding
             int padding = this.gridSize == 36 ? 4 : 8;
             moleView.setPadding(padding, padding, padding, padding);
-            
+
             moleView.setLayoutParams(moleParams);
             moleView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             moleView.setVisibility(View.INVISIBLE);
@@ -257,8 +294,28 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the next mole or power-up at a random position.
-     * Handles different item types (normal mole, time bonus, score bonus).
+     * Stops the background music.
+     */
+    protected void stopBGM() {
+        if (bgmPlayer != null && bgmPlayer.isPlaying()) {
+            bgmPlayer.stop();
+        }
+    }
+
+    /**
+     * Starts the game.
+     */
+    protected void startGame() {
+        score = getIntent().getIntExtra(getString(R.string.extra_score), 0);
+        scoreText.setText(getString(R.string.score_display, score));
+        achievementManager = new AchievementManager(this);
+        isGameActive = true;
+        startTimer();
+        showNextMole();
+    }
+
+    /**
+     * Shows the next mole or power-up.
      */
     protected void showNextMole() {
         // First reset all cells to normal state
@@ -295,8 +352,8 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * Handles player interaction with a target.
-     * Updates score, achievements, and sound effects based on target type.
+     * Handles a click on a target.
+     * @param target The target that was clicked.
      */
     protected void onTargetClick(ImageView target) {
         if (!isGameActive || target == null || target.getTag() == null) {
@@ -445,8 +502,8 @@ public abstract class BaseGameActivity extends AppCompatActivity {
         Window window = dialog.getWindow();
         if (window != null) {
             window.setLayout(
-                (int)(getResources().getDisplayMetrics().widthPixels * 0.9),
-                WindowManager.LayoutParams.WRAP_CONTENT
+                    (int)(getResources().getDisplayMetrics().widthPixels * 0.9),
+                    WindowManager.LayoutParams.WRAP_CONTENT
             );
             window.setGravity(Gravity.CENTER);
         }
@@ -503,18 +560,28 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
-     * @return The layout resource ID for the game activity
+     * Gets the layout resource ID for the game activity.
+     * @return The layout resource ID.
      */
     protected abstract int getLayoutResourceId();
 
     /**
-     * @return The next level's activity class, or null if this is the final level
+     * Gets the next level class.
+     * @return The next level class, or null if there is no next level.
      */
     protected abstract Class<?> getNextLevelClass();
 
     /**
-     * Called when the game timer reaches zero.
-     * Should be implemented by child classes to handle level completion.
+     * Called when the time is up.
      */
     protected abstract void onTimeUp();
+
+    /**
+     * Handles when the player misses a target.
+     * Subclasses can override this to implement specific miss penalties.
+     */
+    protected void onMissedTarget() {
+        // Base implementation does nothing
+        // Subclasses can override to add penalties
+    }
 }
