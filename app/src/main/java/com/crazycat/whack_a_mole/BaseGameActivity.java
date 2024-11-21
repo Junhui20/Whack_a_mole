@@ -318,36 +318,43 @@ public abstract class BaseGameActivity extends AppCompatActivity {
      * Shows the next mole or power-up.
      */
     protected void showNextMole() {
-        // First reset all cells to normal state
-        resetAllCells();
+        // Reset all holes
+        for (ImageView view : targetViews) {
+            if (view != null) {
+                view.setImageResource(R.drawable.hole_empty);
+                view.setTag(null);
+                view.setVisibility(View.INVISIBLE);
+                View parent = view.getParent() instanceof View ? (View) view.getParent() : null;
+                if (parent != null) {
+                    parent.setBackgroundResource(R.drawable.grid_cell_background);
+                }
+            }
+        }
 
-        // Show new mole or power-up
-        int randomValue = new Random().nextInt(100);
         int randomIndex = new Random().nextInt(targetViews.size());
         lastHighlightedView = targetViews.get(randomIndex);
-
-        // Show the mole/power-up
         lastHighlightedView.setVisibility(View.VISIBLE);
+        lastHighlightedView.setImageResource(R.drawable.mole_normal);
 
-        // Determine type and set appearance
-        if (randomValue < 15) { // 15% chance for purple power-up
-            // Set the mole image
-            lastHighlightedView.setImageResource(R.drawable.mole_normal);
-            // Set the power-up background
-            ((View)lastHighlightedView.getParent()).setBackgroundResource(R.drawable.powerup_purple);
-            lastHighlightedView.setTag(getString(R.string.tag_purple));
-        } else if (randomValue < 25) { // Additional 10% chance for golden power-up
-            // Set the mole image
-            lastHighlightedView.setImageResource(R.drawable.mole_normal);
-            // Set the power-up background
-            ((View)lastHighlightedView.getParent()).setBackgroundResource(R.drawable.powerup_golden);
-            lastHighlightedView.setTag(getString(R.string.tag_golden));
+        int currentLevel = getIntent().getIntExtra(getString(R.string.extra_level), 1);
+        View parent = lastHighlightedView.getParent() instanceof View ? (View) lastHighlightedView.getParent() : null;
+        if (parent == null) return;
+
+        if (currentLevel == 5) {
+            int randomValue = new Random().nextInt(100);
+            if (randomValue < 15) { // 15% chance for time bonus
+                parent.setBackgroundResource(R.drawable.powerup_purple);
+                lastHighlightedView.setTag(getString(R.string.tag_purple));
+            } else if (randomValue < 25) { // Additional 10% chance for score bonus
+                parent.setBackgroundResource(R.drawable.powerup_golden);
+                lastHighlightedView.setTag(getString(R.string.tag_golden));
+            } else {
+                parent.setBackgroundResource(R.drawable.grid_cell_active);
+                lastHighlightedView.setTag(getString(R.string.tag_mole));
+            }
         } else {
-            // Regular mole
-            lastHighlightedView.setImageResource(R.drawable.mole_normal);
+            parent.setBackgroundResource(R.drawable.grid_cell_active);
             lastHighlightedView.setTag(getString(R.string.tag_mole));
-            // Set normal active cell background
-            ((View)lastHighlightedView.getParent()).setBackgroundResource(R.drawable.grid_cell_active);
         }
     }
 
@@ -361,34 +368,42 @@ public abstract class BaseGameActivity extends AppCompatActivity {
             return;
         }
 
-        String type = target.getTag().toString();
+        Object tagObj = target.getTag();
+        if (!(tagObj instanceof String)) {
+            return;
+        }
+        String type = (String) tagObj;
         long currentTime = System.currentTimeMillis();
+        int currentLevel = getIntent().getIntExtra(getString(R.string.extra_level), 1);
 
-        if (type.equals(getString(R.string.tag_purple))) {
+        if (getString(R.string.tag_purple).equals(type) && currentLevel == 5) {
             specialItemsCollected++;
             achievementManager.checkPowerupCollection(specialItemsCollected);
             timeRemaining++;
-            timerText.setText(getString(R.string.time_format, timeRemaining));
+            if (timerText != null) {
+                timerText.setText(getString(R.string.time_format, timeRemaining));
+            }
             score += 2;
             consecutiveHits++;
             playTimeBuffSound();
             target.setImageResource(R.drawable.mole_hit);
-        } else if (type.equals(getString(R.string.tag_golden))) {
+        } else if (getString(R.string.tag_golden).equals(type) && currentLevel == 5) {
             specialItemsCollected++;
             achievementManager.checkPowerupCollection(specialItemsCollected);
             score += 2;
             consecutiveHits++;
             playScoreBuffSound();
             target.setImageResource(R.drawable.mole_hit);
-        } else if (type.equals(getString(R.string.tag_mole))) {
+        } else if (getString(R.string.tag_mole).equals(type)) {
             score++;
             consecutiveHits++;
             playClickSound();
             target.setImageResource(R.drawable.mole_hit);
         }
 
-        // Update score display
-        scoreText.setText(getString(R.string.score_display, score));
+        if (scoreText != null) {
+            scoreText.setText(getString(R.string.score_display, score));
+        }
 
         // Check speed achievement
         long timeWindow = currentTime - speedRunStartTime;

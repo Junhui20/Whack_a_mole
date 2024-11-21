@@ -15,16 +15,8 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.Random;
 
-/**
- * Main game activity that implements level-specific logic and UI.
- * Extends BaseGameActivity to add:
- * - Level progression
- * - Tutorial display
- * - High score handling
- * - Level-specific configurations
- */
 public class GameActivity extends BaseGameActivity {
-    private static final int TIME_BONUS_CHANCE = 15;  // 15% chance for time bonus
+    private static final int TIME_BONUS_CHANCE = 15; // 15% chance for time bonus
     private static final int SCORE_BONUS_CHANCE = 10; // 10% chance for score bonus
     private final Random random = new Random();
     private ScoreManager scoreManager;
@@ -61,11 +53,6 @@ public class GameActivity extends BaseGameActivity {
         }
     }
 
-    /**
-     * Configures grid size and time limit based on current level.
-     * Level 1-4: 5 seconds, increasing grid size
-     * Level 5: 30 seconds, 6x6 grid with power-ups
-     */
     private void configureLevelSettings() {
         switch (currentLevel) {
             case 1:
@@ -96,9 +83,6 @@ public class GameActivity extends BaseGameActivity {
         return R.layout.activity_game;
     }
 
-    /**
-     * Shows the tutorial dialog for level 5, explaining power-ups.
-     */
     private void showTutorial() {
         Dialog dialog = new Dialog(this, R.style.LightDialogTheme);
         dialog.setContentView(R.layout.dialog_tutorial);
@@ -147,9 +131,6 @@ public class GameActivity extends BaseGameActivity {
         }
     }
 
-    /**
-     * Shows dialog for new high score, allowing player to enter their name.
-     */
     private void showNewHighScoreDialog() {
         playSuccessSound();
         Dialog dialog = new Dialog(this, R.style.LightDialogTheme);
@@ -184,11 +165,6 @@ public class GameActivity extends BaseGameActivity {
         dialog.show();
     }
 
-    /**
-     * Shows game over dialog with final score and options to:
-     * - View high scores
-     * - Return to main menu
-     */
     private void showGameOverDialog() {
         stopBGM();
         playSuccessSound();
@@ -231,110 +207,12 @@ public class GameActivity extends BaseGameActivity {
 
     @Override
     protected void showNextMole() {
-        // Reset all holes
-        for (ImageView view : targetViews) {
-            if (view != null) {
-                view.setImageResource(R.drawable.hole_empty);
-                view.setTag(null);
-                view.setVisibility(View.INVISIBLE);
-                View parent = view.getParent() instanceof View ? (View) view.getParent() : null;
-                if (parent != null) {
-                    parent.setBackgroundResource(R.drawable.grid_cell_background);
-                }
-            }
-        }
-
-        int randomIndex = random.nextInt(targetViews.size());
-        lastHighlightedView = targetViews.get(randomIndex);
-        lastHighlightedView.setVisibility(View.VISIBLE);
-        lastHighlightedView.setImageResource(R.drawable.mole_normal);
-
-        if (currentLevel == 5) {
-            int randomValue = random.nextInt(100);
-            View parent = lastHighlightedView.getParent() instanceof View ? 
-                (View) lastHighlightedView.getParent() : null;
-            if (parent == null) return;
-            
-            if (randomValue < TIME_BONUS_CHANCE) {
-                parent.setBackgroundResource(R.drawable.powerup_purple);
-                lastHighlightedView.setTag(getString(R.string.tag_purple));
-            } else if (randomValue < TIME_BONUS_CHANCE + SCORE_BONUS_CHANCE) {
-                parent.setBackgroundResource(R.drawable.powerup_golden);
-                lastHighlightedView.setTag(getString(R.string.tag_golden));
-            } else {
-                parent.setBackgroundResource(R.drawable.grid_cell_active);
-                lastHighlightedView.setTag(getString(R.string.tag_mole));
-            }
-        } else {
-            View parent = lastHighlightedView.getParent() instanceof View ? 
-                (View) lastHighlightedView.getParent() : null;
-            if (parent != null) {
-                parent.setBackgroundResource(R.drawable.grid_cell_active);
-                lastHighlightedView.setTag(getString(R.string.tag_mole));
-            }
-        }
+        super.showNextMole();
     }
 
     @Override
     protected void onTargetClick(ImageView target) {
-        if (!isGameActive || target == null || target.getTag() == null) {
-            onMissedTarget();
-            return;
-        }
-
-        Object tagObj = target.getTag();
-        if (!(tagObj instanceof String)) {
-            return;
-        }
-        String type = (String) tagObj;
-        long currentTime = System.currentTimeMillis();
-
-        if (getString(R.string.tag_purple).equals(type)) {
-            specialItemsCollected++;
-            achievementManager.checkPowerupCollection(specialItemsCollected);
-            timeRemaining++;
-            if (timerText != null) {
-                timerText.setText(getString(R.string.time_format, timeRemaining));
-            }
-            score += 2;
-            consecutiveHits++;
-            playTimeBuffSound();
-            target.setImageResource(R.drawable.mole_hit);
-        } else if (getString(R.string.tag_golden).equals(type)) {
-            specialItemsCollected++;
-            achievementManager.checkPowerupCollection(specialItemsCollected);
-            score += 2;
-            consecutiveHits++;
-            playScoreBuffSound();
-            target.setImageResource(R.drawable.mole_hit);
-        } else if (getString(R.string.tag_mole).equals(type)) {
-            score++;
-            consecutiveHits++;
-            playClickSound();
-            target.setImageResource(R.drawable.mole_hit);
-        }
-
-        if (scoreText != null) {
-            scoreText.setText(getString(R.string.score_display, score));
-        }
-
-        // Check speed achievement
-        long timeWindow = currentTime - speedRunStartTime;
-        if (consecutiveHits >= 10 && timeWindow <= 10000) {
-            achievementManager.checkSpeedAchievement(consecutiveHits, timeWindow);
-        }
-
-        lastHitTime = currentTime;
-
-        // Hide the hit mole after a short delay
-        new Handler().postDelayed(() -> {
-            target.setVisibility(View.INVISIBLE);
-            View parent = target.getParent() instanceof View ? (View) target.getParent() : null;
-            if (parent != null) {
-                parent.setBackgroundResource(R.drawable.grid_cell_background);
-            }
-            showNextMole();
-        }, 200);
+        super.onTargetClick(target);
     }
 
     @Override
@@ -349,6 +227,20 @@ public class GameActivity extends BaseGameActivity {
 
     @Override
     protected Class<?> getNextLevelClass() {
-        return currentLevel < 5 ? GameActivity.class : null;
+        if (currentLevel >= 5) {
+            return null;
+        }
+        return GameActivity.class;
+    }
+
+    @Override
+    protected void goToNextLevel() {
+        if (currentLevel < 5) {
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra(getString(R.string.extra_score), score);
+            intent.putExtra(getString(R.string.extra_level), currentLevel + 1);  // Pass the next level number
+            startActivity(intent);
+            finish();
+        }
     }
 }
