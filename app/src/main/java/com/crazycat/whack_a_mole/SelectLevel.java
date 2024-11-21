@@ -1,42 +1,39 @@
 package com.crazycat.whack_a_mole;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 // Activity for selecting game difficulty level (1-5)
-public class SelectLevel extends AppCompatActivity {
+public class SelectLevel extends AppCompatActivity implements LevelAdapter.OnLevelClickListener {
+    private RecyclerView levelRecyclerView;
+    private LevelAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_level);
+
+        levelRecyclerView = findViewById(R.id.levelRecyclerView);
+        setupRecyclerView();
     }
 
-    // Handles level button clicks and starts game with selected level
-    public void onLevelClick(View view) {
-        int level = -1;
-        int viewId = view.getId();
-        
-        if (viewId == R.id.level1_btn) {
-            level = 1;
-        } else if (viewId == R.id.level2_btn) {
-            level = 2;
-        } else if (viewId == R.id.level3_btn) {
-            level = 3;
-        } else if (viewId == R.id.level4_btn) {
-            level = 4;
-        } else if (viewId == R.id.level5_btn) {
-            level = 5;
-        }
-        
-        if (level > 0) {
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra("level", level);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        }
+    private void setupRecyclerView() {
+        adapter = new LevelAdapter(this, this);
+        levelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        levelRecyclerView.setAdapter(adapter);
+    }
+
+    // Handles level selection and starts game with selected level
+    @Override
+    public void onLevelClick(int level) {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("level", level);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     // Returns to previous screen with slide animation

@@ -47,7 +47,8 @@ public class GameActivity extends BaseGameActivity {
         }
         
         if (currentLevel == 5 && !tutorialShown) {
-            showTutorial();
+            startGame();  // Start game normally
+            showTutorial();  // Show tutorial which will pause the timer
         } else {
             startGame();
         }
@@ -83,7 +84,19 @@ public class GameActivity extends BaseGameActivity {
         return R.layout.activity_game;
     }
 
+    private void setupGameWithoutTimer() {
+        score = getIntent().getIntExtra(getString(R.string.extra_score), 0);
+        scoreText.setText(getString(R.string.score_display, score));
+        achievementManager = new AchievementManager(this);
+        isGameActive = true;
+        if (timerText != null) {
+            timerText.setText(getString(R.string.time_format, timeRemaining));
+        }
+    }
+
     private void showTutorial() {
+        pauseTimer();  // Pause the timer when showing tutorial
+        
         Dialog dialog = new Dialog(this, R.style.LightDialogTheme);
         dialog.setContentView(R.layout.dialog_tutorial);
         dialog.setCancelable(false);
@@ -107,7 +120,7 @@ public class GameActivity extends BaseGameActivity {
             startButton.setOnClickListener(v -> {
                 dialog.dismiss();
                 tutorialShown = true;
-                startGame();
+                resumeTimer();  // Resume the timer when tutorial is dismissed
             });
         }
         

@@ -315,6 +315,44 @@ public abstract class BaseGameActivity extends AppCompatActivity {
     }
 
     /**
+     * Pauses the game timer.
+     */
+    protected void pauseTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    /**
+     * Resumes the game timer.
+     */
+    protected void resumeTimer() {
+        startTimer();
+    }
+
+    /**
+     * Starts the game timer.
+     */
+    protected void startTimer() {
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new CountDownTimer(timeRemaining * 1000L, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeRemaining = (int) (millisUntilFinished / 1000);
+                timerText.setText(getString(R.string.time_format, timeRemaining));
+            }
+
+            @Override
+            public void onFinish() {
+                endLevel();
+            }
+        };
+        timer.start();
+    }
+
+    /**
      * Shows the next mole or power-up.
      */
     protected void showNextMole() {
@@ -423,25 +461,6 @@ public abstract class BaseGameActivity extends AppCompatActivity {
 
         // Show next mole after a delay
         new Handler().postDelayed(this::showNextMole, 50);
-    }
-
-    /**
-     * Starts the game timer.
-     */
-    protected void startTimer() {
-        timer = new CountDownTimer(timeRemaining * 1000L, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeRemaining = (int) (millisUntilFinished / 1000);
-                timerText.setText(getString(R.string.time_format, timeRemaining));
-            }
-
-            @Override
-            public void onFinish() {
-                endLevel();
-            }
-        };
-        timer.start();
     }
 
     /**
